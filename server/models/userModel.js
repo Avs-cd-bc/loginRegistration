@@ -30,9 +30,6 @@ const UserSchema = new Schema({
   password: {
     type: String, required: true
   },
-  password_confirm: {
-    type: String, required: true
-  },
   birthday: {
     type: Date, required: true
   }
@@ -41,10 +38,7 @@ const UserSchema = new Schema({
 UserSchema.pre("save", function(done){
   console.log("calling pre-save");
   var salt = bcrypt.genSaltSync(10);
-  var tempPassword = bcrypt.hashSync(this.password, salt);
-  this.password = tempPassword;
-  var tempPassword_confirm = bcrypt.hashSync(this.password_confirm, salt);
-  this.password_confirm = tempPassword_confirm;
+  this.password = bcrypt.hashSync(this.password, salt);
   console.log("done with pre-save");
   done();
 });
