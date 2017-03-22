@@ -1,34 +1,32 @@
-angular.module("app").controller("LoginController", ["$scope", "$location", "registrationFactory", function($scope, $location, registrationFactory){
-  $scope.email;
-  $scope.pword;
+angular.module("app").controller("loginController", function($scope, $location, $window, registrationFactory){
   $scope.id;
   $scope.errorFlag = false;
   $scope.loggedIn = false;
 
   $scope.login = function(){
-    var tempUser = {};
-    tempUser.email = $scope.email;
-    tempUser.password = $scope.pword;
-    registrationFactory.login(tempUser, function(returned_data){
-      $scope.loggedIn = returned_data.loggedIn;
-      $scope.id = returned_data.id;
-      $scope.email = returned_data.email;
-      $scope.errorFlag = false;
-      $scope.error = "";
-    }, function(err_data){
+    if($scope.user.password){
+      registrationFactory.login($scope.user, function(returnedData){
+        if(returnedData.data.error){
+          $scope.errorFlag = true;
+          $scope.error = returnedData.data.error.message;
+        }
+        else{
+          $scope.loggedIn = returnedData.data.loggedIn;
+          $scope.id = returnedData.data.id;
+          $scope.email = returnedData.data.email;
+          $scope.errorFlag = false;
+          $scope.error = "";
+        }
+      });
+    }
+    else{
       $scope.errorFlag = true;
-      $scope.error = err_data;
-    });
+      $scope.error = "Password required!";
+    }
   }
   $scope.logout = function(){
-    console.log("logging Out");
-    registrationFactory.logout(function(returned_data){
-      $scope.email = "";
-      $scope.pword = "";
-      $scope.id = "";
-      $scope.loggedIn = returned_data.loggedIn;
-      $scope.errorFlag = false;
-      $scope.error = "";
-    })
+    registrationFactory.logout(function(){
+      $window.location.reload(true);
+    });
   }
-}]);
+});

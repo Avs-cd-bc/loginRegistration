@@ -1,4 +1,4 @@
-angular.module("app").controller("RegistrationController", ["$scope", "$location", "registrationFactory", function($scope, $location, registrationFactory){
+angular.module("app").controller("registrationController", ["$scope", "$location", "registrationFactory", function($scope, $location, registrationFactory){
   $scope.user;
   $scope.error;
   $scope.errorFlag = false;

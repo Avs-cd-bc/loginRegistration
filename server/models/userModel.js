@@ -36,21 +36,9 @@ const UserSchema = new Schema({
 });
 
 UserSchema.pre("save", function(done){
-  console.log("calling pre-save");
   var salt = bcrypt.genSaltSync(10);
   this.password = bcrypt.hashSync(this.password, salt);
-  console.log("done with pre-save");
   done();
 });
 
 mongoose.model("User", UserSchema);
-
-
-/*validation required:
-first name: letters only
-last name: letters only
-
-email: email format
-password: min length 8 characters
-birthday: required
-*/

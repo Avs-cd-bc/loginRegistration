@@ -14,27 +14,26 @@ function UsersController(){
   }
 
   this.login = function(req, res){
-    console.log(req.body);
     Users.findOne({email: req.body.email}, function(err, user){
+      var error = {
+          error:{
+            message: "Incorrect Username or Password",
+            kind:"Login Error"
+        }
+      }
       if(err) res.json(err)
       else if(user){
         if(bcrypt.compareSync(req.body.password, user.password)){
           res.json({status: "succes", id: user.id, email: user.email});
         }
+        else{
+          res.json(error);
+        }
       }
       else{
-        var error = {
-          errors:{
-            login_error:{
-              message: "Incorrect Username or Password",
-              kind:"Login Error"
-            }
-          }
-        }
         res.json(error);
       }
     });
   }
 }
-
 module.exports = new UsersController();
