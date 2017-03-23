@@ -1,7 +1,13 @@
-angular.module("app").controller("registrationController", ["$scope", "$location", "registrationFactory", function($scope, $location, registrationFactory){
+angular.module("app").controller("registrationController", ["$scope", "$location", "registrationFactory", function($scope, $location, $cookies, registrationFactory){
   $scope.user;
   $scope.error;
   $scope.errorFlag = false;
+
+  function startUp(){
+    if($cookies.get("userEmail")){
+      $location.url("/login");
+    }
+  }
 
   $scope.register = function(){
     if($scope.user.password && $scope.user.password == $scope.passwordConfirm){

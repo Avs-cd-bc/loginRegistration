@@ -1,6 +1,6 @@
 angular.module("app").factory("registrationFactory", RegistrationFactory);
 
-  function RegistrationFactory($http){
+  function RegistrationFactory($http, $cookies){
     var user = {};
     var factory = {};
 
@@ -12,6 +12,9 @@ angular.module("app").factory("registrationFactory", RegistrationFactory);
     factory.login = function(userInfo, callback){
       $http.post("/login", userInfo).then(function(returnedData){
         if(!returnedData.data.error){
+          var cookieExpire = new Date();
+          cookieExpire.setMinutes(cookieExpire.getMinutes() + 20);
+          $cookies.put("userEmail", returnedData.data.email , {"expires" : cookieExpire});
           user = returnedData.data;
           user.loggedIn = true;
         }
@@ -21,7 +24,11 @@ angular.module("app").factory("registrationFactory", RegistrationFactory);
     factory.logout = function(callback){
       user.id = "";
       user.loggedIn = false;
+      $cookies.remove("userEmail");
       callback();
+    }
+    factory.logInCheck = function(callback){
+      callback(user);
     }
     return factory;
   }
